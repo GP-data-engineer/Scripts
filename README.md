@@ -7,7 +7,7 @@ A curated collection of **PowerShell scripts** aimed at improving productivity, 
 
 ## Contents
 
-- **clone-all.ps1** – Clones multiple repositories from a predefined list or organization.
+- **clone-all.ps1** Clones multiple repositories from a predefined list or organization.
 - *(Future scripts will be added here to extend functionality.)*
 
 ## Features
