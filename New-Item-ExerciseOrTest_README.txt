@@ -63,6 +63,8 @@ PRZYKŁADY:
 
 1. Utwórz zadanie + test w Chapter03 dla zadania 1_2_3:
    PS> .\New-Item-ExerciseOrTest.ps1 -Chapter 03 -Name 1_2_3
+   PS> New-Item-ExerciseOrTest -Chapter 03 -Name 3_1_6
+
 
 2. Utwórz tylko plik zadania:
    PS> .\New-Item-ExerciseOrTest.ps1 -Chapter 03 -Name 1_2_3 -OnlyExercise
