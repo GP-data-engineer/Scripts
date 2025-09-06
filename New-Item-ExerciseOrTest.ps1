@@ -1,12 +1,12 @@
 param(
     [Parameter(Mandatory=$true)]
     [ValidatePattern('^\d{2}$')]
-    [string]$Chapter,             # e.g. 01, 02, ..., 35
+    [string]$Chapter,               # e.g. 01, 02, ..., 35
 
-    [string]$Name,                 # e.g. 1_2_3
-    [switch]$OnlyExercise,
-    [switch]$OnlyTest,
-    [switch]$Sync
+    [string]$Name,                  # New-Item-ExerciseOrTest -Chapter 03 -Name 3_1_6
+    [switch]$OnlyExercise,          # New-Item-ExerciseOrTest.ps1 -Chapter 03 -Name 1_2_3 -OnlyExercise
+    [switch]$OnlyTest,              # New-Item-ExerciseOrTest.ps1 -Chapter 03 -Name 1_2_3 -OnlyTest
+    [switch]$Sync                   # New-Item-ExerciseOrTest.ps1 -Sync
 )
 
 # Ścieżki bazowe
