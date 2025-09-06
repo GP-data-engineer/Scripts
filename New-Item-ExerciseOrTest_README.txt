@@ -8,37 +8,34 @@ ENGLISH
 DESCRIPTION:
 This PowerShell script creates template files for exercises and their tests
 in the "Introduction-to-Algorithms-clrs-exercises" repository.
-It can be run from either:
- - src/ChapterXX  → creates exercise file and matching test file
- - tests/ChapterXX → creates test file (and optionally checks for matching exercise)
+It is always run from:
+  C:\GitHub\Repo\Scripts
+
+It creates files in:
+  src\ChapterXX
+  tests\ChapterXX
+where XX is the chapter number (01..35).
 
 OPTIONS:
--Count N         → create N consecutive files
--Minor X         → set subchapter number (e.g., 3_2_X)
--Number Y        → set specific task number
--OnlyExercise    → create only the exercise file
--OnlyTest        → create only the test file
--Sync            → list missing tests for existing exercises and missing exercises for existing tests
+-Chapter XX     → chapter number (required, e.g., 01, 02, ..., 35)
+-Name X_Y_Z     → task name (required unless -Sync), e.g., 1_2_3
+-OnlyExercise   → create only the exercise file
+-OnlyTest       → create only the test file
+-Sync           → list missing tests for existing exercises and missing exercises for existing tests
 
 USAGE EXAMPLES:
 
-1. Create next exercise + test automatically (from src/Chapter03):
-   PS> .\New-Item-ExerciseOrTest.ps1
+1. Create exercise + test in Chapter03 for task 1_2_3:
+   PS> .\New-Item-ExerciseOrTest.ps1 -Chapter 03 -Name 1_2_3
 
-2. Create 3 new exercises + tests:
-   PS> .\New-Item-ExerciseOrTest.ps1 -Count 3
+2. Create only exercise file:
+   PS> .\New-Item-ExerciseOrTest.ps1 -Chapter 03 -Name 1_2_3 -OnlyExercise
 
-3. Create only an exercise file:
-   PS> .\New-Item-ExerciseOrTest.ps1 -OnlyExercise
+3. Create only test file:
+   PS> .\New-Item-ExerciseOrTest.ps1 -Chapter 03 -Name 1_2_3 -OnlyTest
 
-4. Create only a test file:
-   PS> .\New-Item-ExerciseOrTest.ps1 -OnlyTest
-
-5. Create specific exercise/test (Chapter 3, subchapter 1, task 7):
-   PS> .\New-Item-ExerciseOrTest.ps1 -Minor 1 -Number 7
-
-6. Check missing tests/exercises without creating files:
-   PS> .\New-Item-ExerciseOrTest.ps1 -Sync
+4. Check missing tests/exercises in Chapter03:
+   PS> .\New-Item-ExerciseOrTest.ps1 -Chapter 03 -Sync
 
 
 POLSKI
@@ -47,34 +44,28 @@ POLSKI
 OPIS:
 Ten skrypt PowerShell tworzy pliki szablonów dla zadań i ich testów
 w repozytorium "Introduction-to-Algorithms-clrs-exercises".
-Może być uruchamiany z:
- - src/ChapterXX  → tworzy plik zadania i odpowiadający mu plik testu
- - tests/ChapterXX → tworzy plik testu (opcjonalnie sprawdza istnienie pliku źródłowego)
+Zawsze uruchamiany z:
+  C:\GitHub\Repo\Scripts
+
+Tworzy pliki w:
+  src\ChapterXX
+  tests\ChapterXX
+gdzie XX to numer rozdziału (01..35).
 
 OPCJE:
--Count N         → utwórz N kolejnych plików
--Minor X         → ustaw numer podrozdziału (np. 3_2_X)
--Number Y        → ustaw konkretny numer zadania
--OnlyExercise    → utwórz tylko plik zadania
--OnlyTest        → utwórz tylko plik testu
--Sync            → pokaż brakujące testy dla istniejących zadań i brakujące zadania dla istniejących testów
+-Chapter XX     → numer rozdziału (wymagany, np. 01, 02, ..., 35)
+-Name X_Y_Z     → nazwa zadania (wymagana, chyba że -Sync), np. 1_2_3
+-OnlyExercise   → utwórz tylko plik zadania
+-OnlyTest       → utwórz tylko plik testu
+-Sync           → pokaż brakujące testy dla istniejących zadań i brakujące zadania dla istniejących testów
 
 PRZYKŁADY:
 
-1. Utwórz kolejne zadanie + test automatycznie (z src/Chapter03):
-   PS> .\New-Item-ExerciseOrTest.ps1
+1. Utwórz zadanie + test w Chapter03 dla zadania 1_2_3:
+   PS> .\New-Item-ExerciseOrTest.ps1 -Chapter 03 -Name 1_2_3
 
-2. Utwórz 3 kolejne zadania + testy:
-   PS> .\New-Item-ExerciseOrTest.ps1 -Count 3
+2. Utwórz tylko plik zadania:
+   PS> .\New-Item-ExerciseOrTest.ps1 -Chapter 03 -Name 1_2_3 -OnlyExercise
 
-3. Utwórz tylko plik zadania:
-   PS> .\New-Item-ExerciseOrTest.ps1 -OnlyExercise
-
-4. Utwórz tylko plik testu:
-   PS> .\New-Item-ExerciseOrTest.ps1 -OnlyTest
-
-5. Utwórz konkretne zadanie/test (Rozdział 3, podrozdział 1, zadanie 7):
-   PS> .\New-Item-ExerciseOrTest.ps1 -Minor 1 -Number 7
-
-6. Sprawdź brakujące testy/zadania bez tworzenia plików:
-   PS> .\New-Item-ExerciseOrTest.ps1 -Sync
+3. Utwórz tylko plik testu:
+   PS> .\New-Item-ExerciseOrTest.ps1 -Chapter 03 -Name 1_2_3 -OnlyTest

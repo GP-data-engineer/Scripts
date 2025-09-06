@@ -1,64 +1,31 @@
 param(
-    [int]$Count = 1,
-    [int]$Minor = $null,
-    [int]$Number = $null,
-    [switch]$OnlyTest,
+    [Parameter(Mandatory=$true)]
+    [ValidatePattern('^\d{2}$')]
+    [string]$Chapter,             # e.g. 01, 02, ..., 35
+
+    [string]$Name,                 # e.g. 1_2_3
     [switch]$OnlyExercise,
+    [switch]$OnlyTest,
     [switch]$Sync
 )
 
-$cwd = Get-Location
-$folderName = Split-Path $cwd -Leaf
+# Ścieżki bazowe
+$repoRoot = "C:\GitHub\Repo\Introduction-to-Algorithms-clrs-exercises"
+$srcDir   = Join-Path $repoRoot "src\Chapter$Chapter"
+$testsDir = Join-Path $repoRoot "tests\Chapter$Chapter"
 
-if ($folderName -notmatch '^Chapter\d+$') {
-    Write-Error "Uruchom skrypt z katalogu src/ChapterXX lub tests/ChapterXX"
-    exit
-}
-
-$chapterNumber = $folderName -replace 'Chapter', ''
-$baseDir = Split-Path $cwd -Parent
-$repoRoot = Split-Path $baseDir -Parent
-
-if ($baseDir -like "*\src") {
-    $mode = "src"
-    $srcDir = $cwd
-    $testsDir = Join-Path $repoRoot "tests\$folderName"
-} elseif ($baseDir -like "*\tests") {
-    $mode = "tests"
-    $testsDir = $cwd
-    $srcDir = Join-Path $repoRoot "src\$folderName"
-} else {
-    Write-Error "Nie rozpoznano trybu (src/tests)"
-    exit
-}
-
-function Get-LastTaskNumber($dir, $pattern) {
-    $existing = Get-ChildItem -Path $dir -Filter $pattern -ErrorAction SilentlyContinue |
-        ForEach-Object {
-            if ($_ -match '(\d+)_(\d+)_(\d+)\.py') {
-                [PSCustomObject]@{
-                    Major = [int]$matches[1]
-                    Minor = [int]$matches[2]
-                    Task  = [int]$matches[3]
-                }
-            }
-        }
-    if ($existing) {
-        return ($existing | Sort-Object Major, Minor, Task -Descending | Select-Object -First 1)
-    }
-    return $null
-}
+# Utwórz katalogi jeśli nie istnieją
+if (-not (Test-Path $srcDir))   { New-Item -ItemType Directory -Path $srcDir   | Out-Null }
+if (-not (Test-Path $testsDir)) { New-Item -ItemType Directory -Path $testsDir | Out-Null }
 
 # --- SYNC MODE ---
 if ($Sync) {
-    Write-Host "=== SYNC REPORT for $folderName ===" -ForegroundColor Cyan
+    Write-Host "=== SYNC REPORT for Chapter$Chapter ===" -ForegroundColor Cyan
 
     $srcFiles = Get-ChildItem -Path $srcDir -Filter "*.py" -ErrorAction SilentlyContinue |
-        Where-Object { $_.Name -match '(\d+)_(\d+)_(\d+)\.py' } |
         ForEach-Object { $_.BaseName }
 
     $testFiles = Get-ChildItem -Path $testsDir -Filter "*.py" -ErrorAction SilentlyContinue |
-        Where-Object { $_.Name -match '(\d+)_(\d+)_(\d+)\.py' } |
         ForEach-Object { $_.BaseName }
 
     $missingTests = @()
@@ -78,40 +45,31 @@ if ($Sync) {
     }
 
     if ($missingTests.Count -gt 0) {
-        Write-Host "`nBrakujące TESTY dla istniejących plików źródłowych:" -ForegroundColor Yellow
+        Write-Host "`nMissing TESTS for existing exercises:" -ForegroundColor Yellow
         $missingTests | ForEach-Object { Write-Host " - $_" }
     } else {
-        Write-Host "`nBraków testów nie znaleziono." -ForegroundColor Green
+        Write-Host "`nNo missing tests found." -ForegroundColor Green
     }
 
     if ($missingSrc.Count -gt 0) {
-        Write-Host "`nBrakujące PLIKI ŹRÓDŁOWE dla istniejących testów:" -ForegroundColor Yellow
+        Write-Host "`nMissing EXERCISES for existing tests:" -ForegroundColor Yellow
         $missingSrc | ForEach-Object { Write-Host " - $_" }
     } else {
-        Write-Host "`nBraków plików źródłowych nie znaleziono." -ForegroundColor Green
+        Write-Host "`nNo missing exercises found." -ForegroundColor Green
     }
 
     exit
 }
 
-# --- NORMAL MODE (tworzenie plików) ---
-$last = if ($mode -eq "src") {
-    Get-LastTaskNumber $srcDir "Exercise_*.py"
-} else {
-    Get-LastTaskNumber $testsDir "test_exercise_*.py"
+if (-not $Name) {
+    Write-Error "You must provide -Name in format X_Y_Z (e.g., 1_2_3)"
+    exit
 }
 
-if ($Number -and $Minor) {
-    $nextMinor = $Minor
-    $nextTask = $Number
-} elseif ($last) {
-    $nextMinor = if ($Minor) { $Minor } else { $last.Minor }
-    $nextTask = if ($Number) { $Number } else { $last.Task + 1 }
-} else {
-    $nextMinor = if ($Minor) { $Minor } else { 1 }
-    $nextTask = if ($Number) { $Number } else { 1 }
-}
+$exerciseFile = "Exercise_${Name}.py"
+$testFile     = "test_exercise_${Name}.py"
 
+# Szablony
 $exerciseTemplate = @"
 \"\"\"
 Mathematical proof or explanation (comment in English):
@@ -128,7 +86,7 @@ def solution_function(*args, **kwargs):
     return None
 
 if __name__ == "__main__":
-    print("Demonstration of Exercise ${chapterNumber}.${nextMinor}.${nextTask}:")
+    print("Demonstration of Exercise ${Name}:")
     example_result = solution_function()
     print("Example result:", example_result)
 "@
@@ -139,7 +97,7 @@ proof or explanation (comment in English):
 \"\"\"
 
 import pytest
-from src.Chapter${chapterNumber}.Exercise_${chapterNumber}_${nextMinor}_${nextTask} import solution_function
+from src.Chapter$Chapter.Exercise_${Name} import solution_function
 
 def test_basic_case():
     assert solution_function() is None
@@ -148,48 +106,23 @@ def test_additional_case():
     assert True
 "@
 
-for ($i = 0; $i -lt $Count; $i++) {
-    $taskNum = $nextTask + $i
-    $exerciseFile = "Exercise_${chapterNumber}_${nextMinor}_${taskNum}.py"
-    $testFile = "test_exercise_${chapterNumber}_${nextMinor}_${taskNum}.py"
-
-    if ($mode -eq "src" -or $OnlyExercise) {
-        if (-not $OnlyTest) {
-            $exercisePath = Join-Path $srcDir $exerciseFile
-            if (-not (Test-Path $exercisePath)) {
-                Set-Content -Path $exercisePath -Value $exerciseTemplate -Encoding UTF8
-                Write-Host "Created exercise file:" $exerciseFile
-            } else {
-                Write-Warning "Exercise file already exists: $exerciseFile"
-            }
-        }
-        if (-not $OnlyExercise) {
-            if (-not (Test-Path $testsDir)) { New-Item -ItemType Directory -Path $testsDir | Out-Null }
-            $testPath = Join-Path $testsDir $testFile
-            if (-not (Test-Path $testPath)) {
-                Set-Content -Path $testPath -Value $testTemplate -Encoding UTF8
-                Write-Host "Created test file:" $testFile
-            } else {
-                Write-Warning "Test file already exists: $testFile"
-            }
-        }
+# Tworzenie plików
+if (-not $OnlyTest) {
+    $exercisePath = Join-Path $srcDir $exerciseFile
+    if (-not (Test-Path $exercisePath)) {
+        Set-Content -Path $exercisePath -Value $exerciseTemplate -Encoding UTF8
+        Write-Host "Created exercise file:" $exerciseFile
+    } else {
+        Write-Warning "Exercise file already exists: $exerciseFile"
     }
+}
 
-    if ($mode -eq "tests") {
-        if (-not $OnlyTest) {
-            $exercisePath = Join-Path $srcDir $exerciseFile
-            if (-not (Test-Path $exercisePath)) {
-                Write-Warning "Brak pliku źródłowego: $exerciseFile w $srcDir"
-            }
-        }
-        if (-not $OnlyExercise) {
-            $testPath = Join-Path $testsDir $testFile
-            if (-not (Test-Path $testPath)) {
-                Set-Content -Path $testPath -Value $testTemplate -Encoding UTF8
-                Write-Host "Created test file:" $testFile
-            } else {
-                Write-Warning "Test file already exists: $testFile"
-            }
-        }
+if (-not $OnlyExercise) {
+    $testPath = Join-Path $testsDir $testFile
+    if (-not (Test-Path $testPath)) {
+        Set-Content -Path $testPath -Value $testTemplate -Encoding UTF8
+        Write-Host "Created test file:" $testFile
+    } else {
+        Write-Warning "Test file already exists: $testFile"
     }
 }
