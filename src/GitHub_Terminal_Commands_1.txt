@@ -1,6 +1,6 @@
 =====================
-git config --global user.name "Grzegorz Pieniak"
-git config --global user.email "gp79@tutamail.com"
+git config --global user.name "G.....k"
+git config --global user.email "g.....com"
 
 =====================
 git status
