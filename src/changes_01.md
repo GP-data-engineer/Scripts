@@ -1,0 +1,6 @@
+﻿File: test_exercise_3_2_1.py | Changed: 'from Exercise_3_2_1 import is_monotonic_increasing, sum_of_functions, product_of_functions' -> 'from src.Chapter03.Exercise_3_2_1 import is_monotonic_increasing, sum_of_functions, product_of_functions'
+File: test_exercise_3_2_2.py | Changed: 'from Exercise_3_2_2 import log_product' -> 'from src.Chapter03.Exercise_3_2_2 import log_product'
+File: test_exercise_3_2_3.py | Changed: 'from Exercise_3_2_3 import factorial_greater_than_power_of_two' -> 'from src.Chapter03.Exercise_3_2_3 import factorial_greater_than_power_of_two'
+File: test_exercise_3_2_4.py | Changed: 'from Exercise_3_2_4 import is_polynomially_bounded_factorial_log' -> 'from src.Chapter03.Exercise_3_2_4 import is_polynomially_bounded_factorial_log'
+File: test_exercise_3_2_5.py | Changed: 'from Exercise_3_2_5 import log_factorial' -> 'from src.Chapter03.Exercise_3_2_5 import log_factorial'
+File: test_exercise_3_2_6.py | Changed: 'from Exercise_3_2_6 import compare_factorial_growth' -> 'from src.Chapter03.Exercise_3_2_6 import compare_factorial_growth'
