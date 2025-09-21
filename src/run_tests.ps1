@@ -6,7 +6,7 @@ $testDir = "C:\GitHub\Repo\Introduction-to-Algorithms-clrs-exercises\tests\Chapt
 Write-Host "Starting test execution from directory: $testDir" -ForegroundColor Cyan
 
 for ($i = 1; $i -le 9; $i++) {
-    $filename = "test_exercise_4_3_$i.py"
+    $filename = "test_exercise_4_4_$i.py"
     $filepath = Join-Path $testDir $filename
 
     if (Test-Path $filepath) {
