@@ -6,7 +6,7 @@ Add-Type -AssemblyName System.Drawing
 
 # Config
 $ScriptName = "New_Item_ExerciseOrTest.ps1"
-$WorkingDir = "C:\GitHub\Repo\Scripts"   # zmień na katalog, gdzie leżą skrypty
+$WorkingDir = "C:\GitHub\Repo\Scripts\src"   # zmień na katalog, gdzie leżą skrypty
 $Default = @{
     Chapter = 4
     A = 4
