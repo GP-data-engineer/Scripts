@@ -41,7 +41,7 @@
   </div>
 
   <div class="row">
-    <label>Name a_b_c_d_e_f:</label>
+    <label>Name a_b_c_d:</label>
     <span>a</span><button onclick="dec('a')">−</button><input id="a" type="number" value="4" min="0" /><button onclick="inc('a')">+</button>
     <span>b</span><button onclick="dec('b')">−</button><input id="b" type="number" value="4" min="0" /><button onclick="inc('b')">+</button>
     <span>c</span><button onclick="dec('c')">−</button><input id="c" type="number" value="9" min="0" /><button onclick="inc('c')">+</button>
@@ -67,12 +67,12 @@
       const ch = pad2(el('chapter').value);
       const a = el('a').value, b = el('b').value, c = el('c').value;
       const d = el('d').value, e = el('e').value, f = el('f').value;
-      return `${s} -Chapter ${ch} -Name ${a}_${b}_${c}_${d}`;/*; <!-- _${e}_${f}`;*/
+      return `${s} -Chapter ${ch} -Name ${a}_${b}_${c}_${d}`;
     }
 
     function render(){ el('cmd').textContent = buildCmd(); }
 
-    ['script','chapter','a','b','c','d','e','f'].forEach(id => el(id).addEventListener('input', render));
+    ['script','chapter','a','b','c','d'].forEach(id => el(id).addEventListener('input', render));
 
     function inc(id){ el(id).value = Number(el(id).value||0)+1; render(); }
     function dec(id){ el(id).value = Math.max(0, Number(el(id).value||0)-1); render(); }
