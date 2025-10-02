@@ -1,10 +1,11 @@
+# Skrypt: OpenPdf.ps1
 param(
     [string]$PdfPath,
-    [string]$Page = "1"
+    [string]$Page = "76"
 )
 
 # Spróbuj przekonwertować na int
-[int]$pageNum = 1
+[int]$pageNum = 76
 if ([int]::TryParse($Page, [ref]$pageNum)) {
     # OK
 } else {
