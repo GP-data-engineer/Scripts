@@ -1,23 +1,23 @@
-# Skrypt: OpenPdf.ps1
+# Skrypt: OpenPdf_01.ps1
 param(
-    [string]$PdfPath,
-    [string]$Page = "76"
+    [string]$Pdf_Path,
+    [string]$Strona_PDF = "1"
 )
 
 # Spróbuj przekonwertować na int
-[int]$pageNum = 76
-if ([int]::TryParse($Page, [ref]$pageNum)) {
+[int]$pageNum = 2
+if ([int]::TryParse($Strona_PDF, [ref]$pageNum)) {
     # OK
 } else {
-    Write-Warning "Nie udało się przekonwertować '$Page' na liczbę, używam 1"
-    $pageNum = 15
+    Write-Warning "Nie udało się przekonwertować '$Strona_PDF' na liczbę, używam 1"
+    $pageNum = 3
 }
 
 $acrobat = "C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
 
-if (-not (Test-Path $PdfPath)) {
-    Write-Error "Nie znaleziono pliku PDF: $PdfPath"
+if (-not (Test-Path $Pdf_Path)) {
+    Write-Error "Nie znaleziono pliku PDF: $Pdf_Path"
     exit 1
 }
 
-Start-Process -FilePath $acrobat -ArgumentList "/A `"page=$pageNum`" `"$PdfPath`""
+Start-Process -FilePath $acrobat -ArgumentList "/A `"page=$pageNum`" `"$Pdf_Path`""
