@@ -1,14 +1,29 @@
 param(
-    [string]$Pdf_Path,
-    [int]$Page = 1
+    [string]$PdfPath,
+    [string]$Page = "1"
 )
 
+# --- Konwersja numeru strony ---
+[int]$pageNum = 1
+if (-not [int]::TryParse($Page, [ref]$pageNum)) {
+    Write-Warning "Nie udało się przekonwertować '$Page' na liczbę – używam 1"
+    $pageNum = 1
+}
+
+# --- Ścieżka do Acrobata ---
 $acrobat = "C:\Program Files\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
 
-if (-not (Test-Path $Pdf_Path)) {
-    Write-Error "Nie znaleziono pliku PDF: $Pdf_Path"
+# --- Walidacja pliku PDF ---
+if (-not (Test-Path $PdfPath)) {
+    Write-Error "Nie znaleziono pliku PDF: $PdfPath"
     exit 1
 }
 
-$arg = '/A "page={0}" "{1}"' -f $Page, $Pdf_Path
+# --- Budowanie argumentów jako TABLICA ---
+# To jest kluczowe: Acrobat musi dostać /A, page=XX i ścieżkę jako osobne elementy
+$arg = @("/A", "page=$pageNum", $PdfPath)
+
+Write-Host "DEBUG: Uruchamiam: $acrobat $($arg -join ' ')"
+
+# --- Start procesu ---
 Start-Process -FilePath $acrobat -ArgumentList $arg
